@@ -16,4 +16,29 @@ export default class NoteService {
     async getNoteByUser(userId){
         return await this.noteRepository.findByUserId(userId);
     }
+
+    async updateNote(id, data) {
+        const updatedNote = await this.noteRepository.updateByIdAndUser(
+            id,
+            data.userId,
+            data
+        );
+
+        if (!updatedNote) {
+            throw new Error("Nota no encontrada o no pertenece al usuario");
+        }
+
+        return updatedNote;
+    }
+
+    async deleteNote(id, userId) {
+        const deleted = await this.noteRepository.deleteByIdAndUser(id, userId);
+
+        if (!deleted) {
+            throw new Error("Nota no encontrada o no pertenece al usuario");
+        }
+
+        return true;
+    }
+
 }
