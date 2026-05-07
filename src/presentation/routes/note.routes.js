@@ -22,6 +22,7 @@ const router = Router();
 //router.post("/", upload.single('image'), noteController.createNote);
 //router.get("/", noteController.getNotesByUserId);
  
+router.get("/public/:id", noteController.getPublicNote);
 
 /**
  * @swagger
@@ -209,5 +210,7 @@ router.delete("/:id", authMiddleware, roleMiddleware(["admin"]), noteController.
  *         description: No se pudo enviar el correo o no es dueño de la nota
  */
 router.post("/:id/share", authMiddleware, noteController.shareNote);
+
+
  
 export default router;

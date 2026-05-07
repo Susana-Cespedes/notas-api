@@ -1,0 +1,25 @@
+import CategoryEntity from "../../domain/entities/category.entity.js";
+
+export default class CategoryService {
+    constructor(categoryRepository) {
+        this.categoryRepository = categoryRepository;
+    }
+    async createCategory(data) {
+        if (!data.name) {
+            throw new Error("Name is required");
+        }
+        const category = new CategoryEntity(data);
+        return await this.categoryRepository.save(category);
+    }
+
+    async getCategoriesByUser(userId) {
+        return await this.categoryRepository.findByUserId(userId);
+    }
+    async deleteCategory(id, userId) {
+        const deleted = await this.categoryRepository.deleteByIdAndUser(id, userId);
+        if (!deleted) {
+            throw new Error("Category not found");
+        }
+        return {message: "Category deleted successfully"};
+    }
+}
