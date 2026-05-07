@@ -1,4 +1,4 @@
-import NoteModelo from "./note.model.mysql.js"; 
+import NoteModel from "./note.model.mysql.js"; 
  
 export default class NoteMySQLRepository {
     async save(noteEntity) {
@@ -8,42 +8,31 @@ export default class NoteMySQLRepository {
             imageUrl: noteEntity.imageUrl,
             isPrivate: noteEntity.isPrivate,
             password: noteEntity.password,
-            userId: noteEntity.userid
+            userId: noteEntity.userId
         });
         return note.toJSON();
     }
+    
     async findByUserId(userId) {
         return await NoteModel.findAll({ where: { userId } });
     }
 
-    async updateByIdAndUser(id, userId, data) {
-        const [affectedRows] = await NoteModel.update(
-            {
-            title: data.title,
-            content: data.content,
-            imageUrl: data.imageUrl,
-            isPrivate: data.isPrivate,
-            password: data.password
-            },
-            {
-            where: { id, userId }
-            }
-        );
-
-        if (affectedRows === 0) {
-            return null;
-        }
-
-        return await NoteModel.findOne({ where: { id, userId } });
+    async findById(id) {
+        const note = await NoteModel.findByPk(id);
+        return note ? note.toJSON() : null;
     }
 
-    async deleteByIdAndUser(id, userId) {
-        const deletedRows = await NoteModel.destroy({
-            where: { id, userId }
-        });
-
-        return deletedRows > 0;
+    async update(id, data) {
+        const note = await NoteModel.findByPk(id);
+        if (!note) return null;
+        await note.update(data);
+        return note.toJSON();
     }
 
-
+    async delete(id) {
+        const note = await NoteModel.findByPk(id);
+        if (!note) return null;
+        await note.destroy();
+        return true;
+    }
 }

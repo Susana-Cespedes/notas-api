@@ -8,6 +8,8 @@ const NoteModel = sequelize.define("Note", {
     isPrivate: { type: DataTypes.BOOLEAN, defaultValue: false },
     password: { type: DataTypes.STRING },  
     userId: { type: DataTypes.STRING, allowNull: false }
-}, { timestamps: true }); 
+}, { timestamps: true ,
+    tableName: "notes"
+}); 
 
 export default NoteModel;
